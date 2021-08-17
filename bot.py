@@ -50,6 +50,10 @@ async def mentionall(event):
   elif event.reply_to_msg_id:
     mode = "text_on_reply"
     msg = event.reply_to_msg_id
+    if msg == None:
+        return await event.respond("__I can't mention members for older messages! (messages which sended before i added to group)__")
+  elif event.pattern_match.group(1) and event.reply_to_msg_id:
+    return await event.respond("__Give me one argument!__")
   else:
     return await event.respond("__Reply to a message or give me some text to mention others!__")
   
