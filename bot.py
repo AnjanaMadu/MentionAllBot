@@ -75,5 +75,5 @@ async def mentionall(event):
         usrnum = 0
         usrtxt = ""
         
-  print(">> BOT STARTED <<")
-  client.run_until_disconnected()
+print(">> BOT STARTED <<")
+client.run_until_disconnected()
