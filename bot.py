@@ -17,25 +17,25 @@ client = TelegramClient('client', api_id, api_hash).start(bot_token=bot_token)
 
 @client.on(events.NewMessage(pattern="^/start$"))
 async def start(event):
-  await event.reply("__**Im MentionAll Bot**, I can mention almost all members in group or channel 👻\nClick **/help** for more infomation__\n\n Follow [@AnjanaMadu](https://github.com/AnjanaMadu) on Github",
+  await event.reply("__**Im DEADLY MentionAll Bot**, I can mention almost all members in group or channel 😉\nClick **/help** AND PLEASE__\n\n SUPPORT [DEADLY FIGHTERS](https://t.me/DEADLY_FIGHTERS)",
                     buttons=(
-                      [Button.url('📣 Channel', 'https://t.me/harp_tech'),
-                      Button.url('📦 Source', 'https://github.com/AnjanaMadu/MentionAllBot')]
+                      [Button.url('📢Channel', 'https://t.me/DEADLY_NETWORK'),
+                      Button.url('⚜ SUPPORT GROUP ⚜', 'https://t.me/DEADLY_FIGHTERS')]
                     ),
                     link_preview=False
                    )
 @client.on(events.NewMessage(pattern="^/help$"))
 async def help(event):
-  helptext = "**Help Menu of MentionAllBot**\n\nCommand: /mentionall\n__You can use this command with text what you want to mention others.__\n`Example: /mentionall Good Morning!`\n__You can you this command as a reply to any message. Bot will tag users to that replied messsage__.\n\nFollow [@AnjanaMadu](https://github.com/AnjanaMadu) on Github"
+  helptext = "**Help Menu of DEADLY MentionAllBot**\n\nCommand: /all\n__You can use this command with text what you want to mention others.__\n`Example: /all Good Morning!`\n__You can you this command as a reply to any message. Bot will tag users to that replied messsage__.\n\nAND PLEASE SUPPORT [DEADLY FIGHTERS](https://t.me/DEADLY_FIGHTERS)"
   await event.reply(helptext,
                     buttons=(
-                      [Button.url('📣 Channel', 'https://t.me/harp_tech'),
-                      Button.url('📦 Source', 'https://github.com/AnjanaMadu/MentionAllBot')]
+                      [Button.url('📢Channel', 'https://t.me/DEADLY_NETWORK'),
+                      Button.url('⚜ SUPPORT GROUP ⚜', 'https://t.me/DEADLY_FIGHTERS')]
                     ),
                     link_preview=False
                    )
   
-@client.on(events.NewMessage(pattern="^/mentionall ?(.*)"))
+@client.on(events.NewMessage(pattern="^/all ?(.*)"))
 async def mentionall(event):
   if event.is_private:
     return await event.respond("__This command can be use in groups and channels!__")
