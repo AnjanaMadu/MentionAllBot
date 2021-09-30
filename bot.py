@@ -1,7 +1,6 @@
 import os, logging, asyncio
 from telethon import Button
 from telethon import TelegramClient, events
-from telethon.sessions import StringSession
 from telethon.tl.types import ChannelParticipantsAdmins
 
 logging.basicConfig(
@@ -17,7 +16,7 @@ client = TelegramClient('client', api_id, api_hash).start(bot_token=bot_token)
 
 @client.on(events.NewMessage(pattern="^/start$"))
 async def start(event):
-  await event.reply("__**Im MentionAll Bot**, I can mention almost all members in group or channel 👻\nClick **/help** for more infomation__\n\n Follow [@AnjanaMadu](https://github.com/AnjanaMadu) on Github",
+  await event.reply("__**I'm MentionAll Bot**, I can mention almost all members in group or channel 👻\nClick **/help** for more information__\n\n Follow [@AnjanaMadu](https://github.com/AnjanaMadu) on Github",
                     buttons=(
                       [Button.url('📣 Channel', 'https://t.me/harp_tech'),
                       Button.url('📦 Source', 'https://github.com/AnjanaMadu/MentionAllBot')]
@@ -53,7 +52,7 @@ async def mentionall(event):
     mode = "text_on_reply"
     msg = event.reply_to_msg_id
     if msg == None:
-        return await event.respond("__I can't mention members for older messages! (messages which sended before i added to group)__")
+        return await event.respond("__I can't mention members for older messages! (messages which are sent before I'm added to group)__")
   elif event.pattern_match.group(1) and event.reply_to_msg_id:
     return await event.respond("__Give me one argument!__")
   else:
