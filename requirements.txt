@@ -1,3 +1,2 @@
 telethon
 cryptg
-requests
