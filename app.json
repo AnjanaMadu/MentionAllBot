@@ -1,21 +1,16 @@
 {
-  "name": "Mention All Bot",
-  "description": "A simple mention all for telegram.",
-  "env": {
-    "TOKEN": {
-      "description": "Enter bot token.",
-      "value": ""
+    "name": "Mention All Bot",
+    "description": "A simple mention all for telegram.",
+    "env": {
+        "TOKEN": {
+            "description": "Enter bot token."
+        },
+        "APP_ID": {
+            "description": "Get this value from my.telegram.org! Please do not steal."
+        },
+        "API_HASH": {
+            "description": "Get this value from my.telegram.org! Please do not steal."
+        }
     },
-    "APP_ID": {
-      "description": "Get this value from my.telegram.org! Please do not steal.",
-      "value": ""
-    },
-    "API_HASH": {
-      "description": "Get this value from my.telegram.org! Please do not steal.",
-      "value": ""
-    }
-  },
-  "buildpacks": [{
-    "url": "https://github.com/heroku/heroku-buildpack-python.git"
-  }]
+    "buildpacks": [{"url": "heroku/python"}]
 }
