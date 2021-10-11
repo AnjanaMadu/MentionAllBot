@@ -1,7 +1,10 @@
 import os, logging, asyncio
 from telethon import Button
 from telethon import TelegramClient, events
-from telethon.tl.types import ChannelParticipantsAdmins
+from telethon.tl.types mport ChannelParticipantAdmin
+from telethon.tl.types import ChannelParticipantCreator
+from telethon.tl.functions.channels import GetParticipantRequest
+from telethon.errors import UserNotParticipant
 
 logging.basicConfig(
     level=logging.INFO,
@@ -39,10 +42,26 @@ async def mentionall(event):
   if event.is_private:
     return await event.respond("__This command can be use in groups and channels!__")
   
-  admins = []
-  async for admin in client.iter_participants(event.chat_id, filter=ChannelParticipantsAdmins):
-    admins.append(admin.id)
-  if not event.sender_id in admins:
+  is_admin = False
+  try:
+    partici_ = await client(GetParticipantRequest(
+      event.chat_id,
+      event.sender_id
+    ))
+  except UserNotParticipant:
+    is_admin = False
+  else:
+    if (
+      isinstance(
+        partici_.participant,
+        (
+          ChannelParticipantAdmin,
+          ChannelParticipantCreator
+        )
+      )
+    ):
+      is_admin = True
+  if not is_admin:
     return await event.respond("__Only admins can mention all!__")
   
   if event.pattern_match.group(1):
