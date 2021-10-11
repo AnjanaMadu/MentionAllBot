@@ -16,7 +16,29 @@ api_id = int(os.environ.get("APP_ID"))
 api_hash = os.environ.get("API_HASH")
 bot_token = os.environ.get("TOKEN")
 client = TelegramClient('client', api_id, api_hash).start(bot_token=bot_token)
-spam_chats = []
+spam_chats = {}
+
+async def mention_members(client, chat_id, mode, msg):
+  usrnum = 0
+  usrtxt = ""
+  if mode == "text_on_cmd":
+    async for usr in client.iter_participants(chat_id):
+      usrnum += 1
+      usrtxt += f"[{usr.first_name}](tg://user?id={usr.id}) "
+      if usrnum == 5:
+        await client.send_message(chat_id, f"{usrtxt}\n\n{msg}")
+        await asyncio.sleep(2)
+        usrnum = 0
+        usrtxt = ""
+  elif mode == "text_on_reply":
+    async for usr in client.iter_participants(chat_id):
+      usrnum += 1
+      usrtxt += f"[{usr.first_name}](tg://user?id={usr.id}) "
+      if usrnum == 5:
+        await client.send_message(chat_id, usrtxt, reply_to=msg)
+        await asyncio.sleep(2)
+        usrnum = 0
+        usrtxt = ""
 
 @client.on(events.NewMessage(pattern="^/start$"))
 async def start(event):
@@ -66,7 +88,9 @@ async def mentionall(event):
   if not is_admin:
     return await event.respond("__Only admins can mention all!__")
   
-  if event.pattern_match.group(1):
+  if event.pattern_match.group(1) and event.reply_to_msg_id:
+    return await event.respond("__Give me one argument!__")
+  elif event.pattern_match.group(1):
     mode = "text_on_cmd"
     msg = event.pattern_match.group(1)
   elif event.reply_to_msg_id:
@@ -74,39 +98,13 @@ async def mentionall(event):
     msg = event.reply_to_msg_id
     if msg == None:
         return await event.respond("__I can't mention members for older messages! (messages which are sent before I'm added to group)__")
-  elif event.pattern_match.group(1) and event.reply_to_msg_id:
-    return await event.respond("__Give me one argument!__")
   else:
     return await event.respond("__Reply to a message or give me some text to mention others!__")
   
-  spam_chats.append(event.chat_id)
-  if mode == "text_on_cmd":
-    usrnum = 0
-    usrtxt = ""
-    async for usr in client.iter_participants(event.chat_id):
-      while event.chat_id in spam_chats:
-        usrnum += 1
-        usrtxt += f"[{usr.first_name}](tg://user?id={usr.id}) "
-        if usrnum == 5:
-          await client.send_message(event.chat_id, f"{usrtxt}\n\n{msg}")
-          await asyncio.sleep(2)
-          usrnum = 0
-          usrtxt = ""
-        
-  if mode == "text_on_reply":
-    usrnum = 0
-    usrtxt = ""
-    async for usr in client.iter_participants(event.chat_id):
-      while event.chat_id in spam_chats:
-        usrnum += 1
-        usrtxt += f"[{usr.first_name}](tg://user?id={usr.id}) "
-        if usrnum == 5:
-          await client.send_message(event.chat_id, usrtxt, reply_to=msg)
-          await asyncio.sleep(2)
-          usrnum = 0
-          usrtxt = ""
-
-  spam_chats.remove(event.chat_id)
+  task = asyncio.create_task(mention_members(client, event.chat_id, mode, msg))
+  spam_chats[event.chat_id] = task
+  await task
+  spam_chats.pop(event.chat_id)
 
 @client.on(events.NewMessage(pattern="^/cancel$"))
 async def cancel_spam(event):
@@ -114,9 +112,11 @@ async def cancel_spam(event):
     return await event.respond('__There is no proccess on going...__')
   else:
     try:
-      spam_chats.remove(event.chat_id)
+      spam_chats[event.chat_id].stop()
     except:
       pass
+    finally:
+      spam_chats.pop(event.chat_id)
     return await event.respond('__Stopped.__')
 
 print(">> BOT STARTED <<")
