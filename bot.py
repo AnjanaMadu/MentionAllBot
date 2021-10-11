@@ -73,14 +73,14 @@ async def mentionall(event):
   if not is_admin:
     return await event.respond("__Only admins can mention all!__")
   
-  if event.pattern_match.group(1) and event.reply_to_msg_id:
+  if event.pattern_match.group(1) and event.is_reply:
     return await event.respond("__Give me one argument!__")
   elif event.pattern_match.group(1):
     mode = "text_on_cmd"
     msg = event.pattern_match.group(1)
-  elif event.reply_to_msg_id:
+  elif event.is_reply:
     mode = "text_on_reply"
-    msg = event.reply_to_msg_id
+    msg = await event.get_reply_message()
     if msg == None:
         return await event.respond("__I can't mention members for older messages! (messages which are sent before I'm added to group)__")
   else:
@@ -99,7 +99,7 @@ async def mentionall(event):
         txt = f"{usrtxt}\n\n{msg}"
         await client.send_message(chat_id, txt)
       elif mode == "text_on_reply":
-        await client.send_message(chat_id, usrtxt, reply_to=msg)
+        await msg.reply(usrtxt)
       await asyncio.sleep(2)
       usrnum = 0
       usrtxt = ''
