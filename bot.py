@@ -99,11 +99,14 @@ async def mentionall(event):
         txt = f"{usrtxt}\n\n{msg}"
         await client.send_message(chat_id, txt)
       elif mode == "text_on_reply":
-        await client.send_message(chat_id, usrtxt, reply_to=msg)
+        await client.send_message(chat_id, usrtxt, reply_to=msg.id)
       await asyncio.sleep(2)
       usrnum = 0
       usrtxt = ''
-  spam_chats.remove(chat_id)
+  try:
+    spam_chats.remove(chat_id)
+  except:
+    pass
 
 @client.on(events.NewMessage(pattern="^/cancel$"))
 async def cancel_spam(event):
