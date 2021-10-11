@@ -4,7 +4,7 @@ from telethon import TelegramClient, events
 from telethon.tl.types import ChannelParticipantAdmin
 from telethon.tl.types import ChannelParticipantCreator
 from telethon.tl.functions.channels import GetParticipantRequest
-from telethon.errors import UserNotParticipant
+from telethon.errors import UserNotParticipantError
 
 logging.basicConfig(
     level=logging.INFO,
@@ -50,7 +50,7 @@ async def mentionall(event):
       event.chat_id,
       event.sender_id
     ))
-  except UserNotParticipant:
+  except UserNotParticipantError:
     is_admin = False
   else:
     if (
