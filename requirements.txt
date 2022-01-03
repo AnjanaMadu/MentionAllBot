@@ -1,3 +1,4 @@
 telethon
 cryptg
 asyncio
+python-dotenv
